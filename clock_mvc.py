@@ -48,6 +48,7 @@ class WatchModel(Informer):
 
         t = threading.Thread(
             target=self.tick_timer, name='TimerThread')
+        t.daemon = True
         t.start()
 
     def notify_observers(self, tick_time):
@@ -77,7 +78,7 @@ class WatchView(Observer):
         model.add_observer(self)
 
     def update(self, tick_time):
-        str_tick_time = "%02d:%02d" % (
+        str_tick_time = "%02d.%02d" % (
             tick_time, (tick_time - int(tick_time)) * 100)
         print str_tick_time
 
@@ -93,7 +94,7 @@ class WatchController(object):
         view.update(model.tick_time)
 
         while True:
-            std_in = input('input something:')
+            std_in = raw_input('input something:')
             if std_in == 'q':
                 break
             model.start_stop()
